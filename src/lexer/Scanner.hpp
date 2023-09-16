@@ -14,6 +14,7 @@ class Scanner {
   bool isAtEnd();
   char advance();
   bool match(char excepted);
+  char peek();
   void addToken(TokenType type);
   void addToken(TokenType type, Object literal);
 
