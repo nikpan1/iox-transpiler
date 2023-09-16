@@ -1,56 +1,14 @@
+#include <bits/types/FILE.h>
+#include <iostream>
 #include <stdio.h>
 #include <string>
 #include <vector>
 
-enum TokenType {
-  // Single-character tokens.
-  LEFT_PAREN,
-  RIGHT_PAREN,
-  LEFT_BRACE,
-  RIGHT_BRACE,
-  COMMA,
-  DOT,
-  MINUS,
-  PLUS,
-  SEMICOLON,
-  SLASH,
-  STAR,
+#include "Core.cpp"
+#define NULL (void *)0
 
-  // One or two character tokens.
-  BANG,
-  BANG_EQUAL,
-  EQUAL,
-  EQUAL_EQUAL,
-  GREATER,
-  GREATER_EQUAL,
-  LESS,
-  LESS_EQUAL,
-
-  // Literals.
-  IDENTIFIER,
-  STRING,
-  NUMBER,
-
-  // Keywords.
-  AND,
-  CLASS,
-  ELSE,
-  FALSE,
-  FUN,
-  FOR,
-  IF,
-  NIL,
-  OR,
-  PRINT,
-  RETURN,
-  SUPER,
-  THIS,
-  TRUE,
-  VAR,
-  WHILE,
-
-  EOF
-};
+void runFile(char *path);
+void runPrompt();
 
 class Token {
 
@@ -59,30 +17,34 @@ class Token {
   Object literal;
   int line;
 
+public:
   Token(TokenType tp, std::string le, Object lit, int lin) {
     type = tp;
     lexeme = le;
     literal = lit;
     line = lin;
   }
-  bool isAtEnd() { return current >= source.length(); }
+};
+
+class Scanner {
+  std::string source;
+  char *current;
+  std::vector<Token> tokens;
+
+public:
+  Scanner(std::string s) { source = s; }
+  bool isAtEnd() { return *current >= source.length(); }
+
   std::vector<Token> scanTokens() {
     while (!isAtEnd()) {
       start = current;
       scanToken();
     }
 
-    tokens.add(new Token(EOF, "", null, line));
+    tokens.add(new Token(EOF, "", NULL, line));
     return tokens;
   }
-}
-
-class Scanner {
-  std::string src;
-  std::vector<Token> tokens;
-
-  Scanner(std::string s) { src = s; }
-}
+};
 
 int main(int argc, char *argv[]) {
   if (argc > 1) {
@@ -107,7 +69,7 @@ class lox {
 
     for (;;) {
       printf("> ");
-      scanf("%s", line.c_str());
+      std::cout << line << std::endl;
       if (line.empty())
         break;
       run(line);
@@ -120,7 +82,7 @@ class lox {
     std::vector<Token> tokens = scanner.scanTokens();
 
     for (Token token : tokens) {
-      printf("%s", token)
+      printf("%s", token);
     }
   }
 
@@ -130,4 +92,4 @@ class lox {
     printf("[Line: %d] | Error: %s : \n->%s", line, message.c_str(),
            where.c_str());
   }
-}
+};
