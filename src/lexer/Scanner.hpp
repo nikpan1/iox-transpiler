@@ -1,3 +1,4 @@
+#include "Core.cpp"
 #include "Token.hpp"
 #include <string>
 #include <vector>
@@ -11,9 +12,14 @@ class Scanner {
   std::vector<Token> tokens;
 
   bool isAtEnd();
+  char advance();
+  bool match(char excepted);
+  void addToken(TokenType type);
+  void addToken(TokenType type, Object literal);
 
 public:
   Scanner(std::string s);
   std::vector<Token> scanTokens();
   void scanToken();
+  void scanToken(TokenType type, Object literal);
 };

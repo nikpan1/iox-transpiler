@@ -5,8 +5,6 @@ Token::Token(TokenType tp, std::string le, Object lit, int lin) {
   lexeme = le;
   literal = lit;
   line = lin;
-
-  token = new Token()
 }
 
 std::ostream &operator<<(std::ostream &os, const Token &obj) {

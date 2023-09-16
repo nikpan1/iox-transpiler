@@ -9,7 +9,7 @@ std::vector<Token> Scanner::scanTokens() {
     scanToken();
   }
 
-  tokens.add(Token(EOF, "", NULL, line));
+  tokens.push_back(Token(EOF, "", NULL, line));
   return tokens;
 }
 
@@ -46,9 +46,35 @@ void Scanner::scanToken() {
   case '*':
     addToken(STAR);
     break;
+  case '!':
+    addToken(match('=') ? BANG_EQUAL : BANG);
+    break;
+  case '=':
+    addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+    break;
+  case '<':
+    addToken(match('=') ? LESS_EQUAL : LESS);
+    break;
+  case '>':
+    addToken(match('=') ? GREATER_EQUAL : GREATER);
+    break;
+  default:
+    Lox.error(line, "Unexpected character.");
+    break;
   }
 }
 
 char Scanner::advance() { return source[current++]; }
-void Scanner addToken(TokenType type, Object literal) { std::string }
-void Scanner::addToken(TokenType type){addToken(type, NULL)};
+void Scanner::addToken(TokenType type, Object literal) {
+  std::string text = source.substr(start, current);
+  tokens.push_back(Token(type, text, literal, line));
+}
+
+void Scanner::addToken(TokenType type) { addToken(type, NULL); }
+
+bool Scanner::match(char excepted) {
+  if (isAtEnd() || source[current] != excepted)
+    return false;
+  current++;
+  return true;
+}
