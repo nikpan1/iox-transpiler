@@ -21,8 +21,9 @@ class Scanner {
   void addToken(TokenType type);
   void addToken(TokenType type, Object literal);
   void string_con();
-  bool isDigit(char c);
   void number_con();
+  void comment_con();
+  bool isDigit(char c);
 
   bool isAlpha(char c);
   bool isAlphanumeric(char c);

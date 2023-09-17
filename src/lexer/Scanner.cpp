@@ -60,6 +60,8 @@ void Scanner::scanToken() {
     break;
   case '/':
     if (match('/')) {
+      if (peek() == '*') // comment block
+        comment_con();
       // A comment goes until the end of the line.
       while (peek() != '\n' && !isAtEnd())
         advance();
@@ -87,7 +89,7 @@ void Scanner::scanToken() {
       identifier();
     } else {
 
-      Lox.error(line, "Unexpected character.");
+      _lox.error(line, "Unexpected character.");
     }
     break;
   }
@@ -145,6 +147,18 @@ void Scanner::number_con() {
   }
   double strNumToDouble = std::stod(source.substr(start, current));
   addToken(NUMBER, strNumToDouble);
+}
+
+void Scanner::comment_con() {
+  advance();
+  while (peek() != '*') {
+    if (peek() == '\n')
+      line++;
+    if (peek() == '/')
+      if (peek() == '*')
+        comment_con();
+  }
+  advance();
 }
 
 char Scanner::peekNext() {
