@@ -77,6 +77,9 @@ void Scanner::scanToken() {
   case '\n':
     line++;
     break;
+  case '"':
+    string_con();
+    break;
   default:
     Lox.error(line, "Unexpected character.");
     break;
@@ -102,4 +105,22 @@ char Scanner::peek() {
   if (isAtEnd())
     return '\0';
   return source[current];
+}
+
+void Scanner::string_con() {
+  while (peek() != '"' && !isAtEnd()) {
+    if (peek() == '\n')
+      line++;
+    advance();
+  }
+
+  if (isAtEnd()) {
+    Lox.error(line, "Unterminated string.");
+    return;
+  }
+
+  advance(); // closing ""
+
+  std::string value = source.substr(start + 1, current - 1);
+  addToken(STRING, value);
 }

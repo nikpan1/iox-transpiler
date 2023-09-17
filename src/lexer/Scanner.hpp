@@ -17,6 +17,7 @@ class Scanner {
   char peek();
   void addToken(TokenType type);
   void addToken(TokenType type, Object literal);
+  void string_con();
 
 public:
   Scanner(std::string s);
