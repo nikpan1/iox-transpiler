@@ -1,5 +1,6 @@
 #include "Core.cpp"
 #include "Token.hpp"
+#include "main.cpp"
 #include <string>
 #include <vector>
 
