@@ -157,6 +157,10 @@ void Scanner::identifier() {
   while (isAlphanumeric(peek()))
     advance();
 
+  std::string text = source.substr(start, current);
+  TokenType type = keywords.find(text);
+  if (type == nul)
+    type = IDENTIFIER;
   addToken(IDENTIFIER);
 }
 
