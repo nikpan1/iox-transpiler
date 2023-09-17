@@ -81,7 +81,14 @@ void Scanner::scanToken() {
     string_con();
     break;
   default:
-    Lox.error(line, "Unexpected character.");
+    if (isDigit(c)) {
+      number_con();
+    } else if (isAlpha(c)) {
+      identifier();
+    } else {
+
+      Lox.error(line, "Unexpected character.");
+    }
     break;
   }
 }
@@ -115,7 +122,7 @@ void Scanner::string_con() {
   }
 
   if (isAtEnd()) {
-    Lox.error(line, "Unterminated string.");
+    _lox.error(line, "Unterminated string.");
     return;
   }
 
@@ -124,3 +131,37 @@ void Scanner::string_con() {
   std::string value = source.substr(start + 1, current - 1);
   addToken(STRING, value);
 }
+
+bool Scanner::isDigit(char c) { return (c >= '0' && c <= '9'); }
+
+void Scanner::number_con() {
+  while (isDigit(peek()))
+    advance();
+  if (peek() == '.' && isDigit(peekNext())) {
+    // consumes the '.'
+    advance();
+    while (isDigit(peek()))
+      advance();
+  }
+  double strNumToDouble = std::stod(source.substr(start, current));
+  addToken(NUMBER, strNumToDouble);
+}
+
+char Scanner::peekNext() {
+  if (current + 1 >= source.length())
+    return '\0';
+  return source[current + 1];
+}
+
+void Scanner::identifier() {
+  while (isAlphanumeric(peek()))
+    advance();
+
+  addToken(IDENTIFIER);
+}
+
+bool Scanner::isAlpha(char c) {
+  return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_'));
+}
+
+bool Scanner::isAlphanumeric(char c) { return isAlpha(c) || isDigit(c); }

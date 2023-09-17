@@ -1,3 +1,5 @@
+#include <map>
+#include <string>
 
 enum TokenType {
   // Single-character tokens.
@@ -33,7 +35,7 @@ enum TokenType {
   CLASS,
   ELSE,
   FALSE,
-  FUN,
+  FUNCTION,
   FOR,
   IF,
   NIL,
@@ -45,6 +47,11 @@ enum TokenType {
   TRUE,
   VAR,
   WHILE,
-
   EOF
 };
+
+std::map<std::string, TokenType> keywords = {
+    {"AND", AND},     {"OR", OR},       {"class", CLASS},   {"else", ELSE},
+    {"False", FALSE}, {"for", FOR},     {"def", FUNCTION},  {"if", IF},
+    {"nil", NIL},     {"print", PRINT}, {"return", RETURN}, {"super", SUPER},
+    {"this", THIS},   {"True", TRUE},   {"var", VAR},       {"while", WHILE}};

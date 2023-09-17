@@ -48,6 +48,7 @@ class lox {
     run(source);
   }
 
+public:
   void run(std::string src) {
     if (hadError) {
       std::cerr << "run | had an error.";

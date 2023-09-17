@@ -1,5 +1,6 @@
 #include "Core.cpp"
 #include "Token.hpp"
+#include "lox.cpp"
 #include "main.cpp"
 #include <string>
 #include <vector>
@@ -9,16 +10,23 @@ class Scanner {
   int start = 0;
   int current = 0;
   int line = 1;
-
+  lox _lox;
   std::vector<Token> tokens;
 
   bool isAtEnd();
   char advance();
   bool match(char excepted);
   char peek();
+  char peekNext();
   void addToken(TokenType type);
   void addToken(TokenType type, Object literal);
   void string_con();
+  bool isDigit(char c);
+  void number_con();
+
+  bool isAlpha(char c);
+  bool isAlphanumeric(char c);
+  void identifier();
 
 public:
   Scanner(std::string s);
