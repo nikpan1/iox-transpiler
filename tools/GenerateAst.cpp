@@ -18,13 +18,13 @@ std::vector<std::string> split(const std::string &str,
                                const std::string &separator) {
   std::vector<std::string> result;
 
-  uint16_t start = 0, end = 0;
+  int start = 0;
+  int foundPos = str.find(separator);
 
-  while (end >= str.length()) {
-    while (str[end] != separator[0])
-      end++;
-
-    // !!!!!
+  while (foundPos != std::string::npos) {
+    result.push_back(str.substr(start, foundPos));
+    start = foundPos + separator.size();
+    foundPos = str.find(separator, foundPos + 1);
   }
 
   return result;
@@ -73,5 +73,11 @@ int main(int argc, char *argv[]) {
     return -1;
   }
   std::string dir = argv[1];
-  defineAst(dir, "Expr", EXPRESSIONS);
+
+  std::string s = "test1, test2, test3, test4, 23rgrdg, o";
+  auto p = split(s, ", ");
+  for (const auto ps : p)
+    std::cout << ps << "|" << endl;
+
+  // defineAst(dir, "Expr", EXPRESSIONS);
 }
