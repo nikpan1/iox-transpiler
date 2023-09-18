@@ -22,9 +22,10 @@ std::vector<std::string> split(const std::string &str,
   int foundPos = str.find(separator);
 
   while (foundPos != std::string::npos) {
-    result.push_back(str.substr(start, foundPos));
+    result.push_back(str.substr(start, foundPos - start));
     start = foundPos + separator.size();
-    foundPos = str.find(separator, foundPos + 1);
+
+    foundPos = str.find(separator, start);
   }
 
   return result;
