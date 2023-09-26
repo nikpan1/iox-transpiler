@@ -18,7 +18,7 @@ std::vector<std::string> split(const std::string &str,
                                const std::string &separator) {
   std::vector<std::string> result;
 
-  int start = 0;
+  int start = 0, last = 0;
   int foundPos = str.find(separator);
 
   while (foundPos != std::string::npos) {
@@ -28,6 +28,7 @@ std::vector<std::string> split(const std::string &str,
     foundPos = str.find(separator, start);
   }
 
+  result.push_back(str.substr(start, str.length() - 1));
   return result;
 }
 
@@ -40,6 +41,16 @@ void defineType(std::ofstream &output, std::string &baseName,
 
   // store parameters in fields
   auto fields = split(elements, ", ");
+  for (const auto field : fields) {
+    auto names = split(field, " ");
+    auto name = names[1];
+    output << " this." << name << " = " << name << ';';
+  }
+  output << "\t}\n";
+  for (const auto field : fields) {
+    output << "\tfinal " << field << ';';
+  }
+  output << "\t}";
 }
 
 template <typename T, size_t N>
@@ -75,10 +86,5 @@ int main(int argc, char *argv[]) {
   }
   std::string dir = argv[1];
 
-  std::string s = "test1, test2, test3, test4, 23rgrdg, o";
-  auto p = split(s, ", ");
-  for (const auto ps : p)
-    std::cout << ps << "|" << endl;
-
-  // defineAst(dir, "Expr", EXPRESSIONS);
+  defineAst(dir, "Expr", EXPRESSIONS);
 }
