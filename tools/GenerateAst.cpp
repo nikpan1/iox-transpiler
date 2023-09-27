@@ -5,17 +5,36 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #define endl '\n'
 #define tab '\t'
 
 std::array<std::string, 4> EXPRESSIONS = {
-    "Binary   : Expr left, Token operator, Expr right",
-    "Grouping : Expr expression", "Literal  : Object value",
-    "Unary    : Token operator, Expr right"};
+      "Binary   : Expr left, Token operator, Expr right",
+      "Grouping : Expr expression",
+      "Literal  : Object value",
+      "Unary    : Token operator, Expr right"
+};
+
+
+
+bool isWhitespace(unsigned char c) {
+    if (c == ' ' || c == '\t' || c == '\n' ||
+        c == '\r' || c == '\f' || c == '\v') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+std::string eraseWS(std::string s) {
+  s.erase(std::remove_if(s.begin(), s.end(), isWhitespace), s.end());
+  return s;
+}
 
 std::vector<std::string> split(const std::string &str,
-                               const std::string &separator) {
+                               std::string separator) {
   std::vector<std::string> result;
 
   int start = 0, last = 0;
@@ -34,28 +53,30 @@ std::vector<std::string> split(const std::string &str,
 
 void defineType(std::ofstream &output, std::string &baseName,
                 std::string &className, std::string &elements) {
-  output << "static class" << className << " : " << baseName << " {\n";
+  output << "static class " << className << " : " << baseName << " {\n";
 
   // constructor
-  output << tab << "public" << "\n" << className << "(" << elements << ")";
+  output << tab << "public:\n" << className << "(" << elements << ")";
 
   // store parameters in fields
   auto fields = split(elements, ", ");
   std::string initList = "\n";
   for (const auto field : fields) {
-    initList += field + ";\n";
+    initList += " " + field + ";\n";
 
     auto names = split(field, " ");
     auto name = names[1];
     output << " : " << name << '(' << name << ')';
   }
-  
+  output << "{}\n";
+  className = eraseWS(className);
+
+  // visitor interface
   output << initList;
-  output << 
-  "\n template<typename R>"
-  "\n R accept(Visitor<R> visitor) {"
-  "\n\t return visitor.visit"
-  << className <<"Expr(this);\n}\n}";
+  output << "\n template<typename R>" 
+  "\n R accept(Visitor<R> visitor) {" 
+  "\n\t return visitor.visit" 
+  << className <<"Expr(this);\n}\n}\n";
 }
 
 template<typename T, size_t N>
@@ -81,6 +102,8 @@ void defineBase(std::ofstream& output, const std::array<T,N> &types) {
   "\n  template<typename R>"
   "\n  R accept(Visitor<R> visitor);"
   "\n };";
+
+
 }
 
 template <typename T, size_t N>
@@ -116,4 +139,3 @@ int main(int argc, char *argv[]) {
 
   defineAst(dir, "Expr", EXPRESSIONS);
 }
-#define pozdro
