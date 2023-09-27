@@ -37,20 +37,50 @@ void defineType(std::ofstream &output, std::string &baseName,
   output << "static class" << className << " : " << baseName << " {\n";
 
   // constructor
-  output << tab << className << '(' << elements << ") {";
+  output << tab << "public" << "\n" << className << "(" << elements << ")";
 
   // store parameters in fields
   auto fields = split(elements, ", ");
+  std::string initList = "\n";
   for (const auto field : fields) {
+    initList += field + ";\n";
+
     auto names = split(field, " ");
     auto name = names[1];
-    output << " this." << name << " = " << name << ';';
+    output << " : " << name << '(' << name << ')';
   }
-  output << "\t}\n";
-  for (const auto field : fields) {
-    output << "\tfinal " << field << ';';
+  
+  output << initList;
+  output << 
+  "\n template<typename R>"
+  "\n R accept(Visitor<R> visitor) {"
+  "\n\t return visitor.visit"
+  << className <<"Expr(this);\n}\n}";
+}
+
+template<typename T, size_t N>
+void defineBase(std::ofstream& output, const std::array<T,N> &types) {
+  
+  output << endl;
+  output << "\n template<typename R>\n class Visitor{";
+
+  for (const auto &type : types) {
+    uint8_t semicol = type.find(':');
+    std::string className = type.substr(0, semicol);
+
+    output << tab << "R visit" << className << "Expr(" << className << " expr);\n";
   }
-  output << "\t}";
+
+  output << 
+  "\n  R ...()"
+  "\n  R ...()"
+  "\n };"
+  "\n "
+  "\n class Expr {"
+  "\n public:"
+  "\n  template<typename R>"
+  "\n  R accept(Visitor<R> visitor);"
+  "\n };";
 }
 
 template <typename T, size_t N>
@@ -65,8 +95,6 @@ void defineAst(std::string outputDir, std::string baseName,
     exit(-1);
   }
 
-  output << endl;
-  output << "class" + baseName + " {" + endl; // baseName to klasa bazowa
   for (const auto &type : types) {
     uint8_t semicol = type.find(':');
     std::string className = type.substr(0, semicol);
@@ -88,3 +116,4 @@ int main(int argc, char *argv[]) {
 
   defineAst(dir, "Expr", EXPRESSIONS);
 }
+#define pozdro
