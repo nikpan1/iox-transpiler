@@ -10,13 +10,13 @@
 #define endl '\n'
 #define tab '\t'
 
+
 std::array<std::string, 4> EXPRESSIONS = {
       "Binary   : Expr left, Token operator, Expr right",
       "Grouping : Expr expression",
       "Literal  : Object value",
       "Unary    : Token operator, Expr right"
 };
-
 
 
 bool isWhitespace(unsigned char c) {
@@ -28,10 +28,12 @@ bool isWhitespace(unsigned char c) {
     }
 }
 
+
 std::string eraseWS(std::string s) {
   s.erase(std::remove_if(s.begin(), s.end(), isWhitespace), s.end());
   return s;
 }
+
 
 std::vector<std::string> split(const std::string &str,
                                std::string separator) {
@@ -47,12 +49,13 @@ std::vector<std::string> split(const std::string &str,
     foundPos = str.find(separator, start);
   }
 
-  result.push_back(str.substr(start, str.length() - 1));
+  result.push_back(str.substr(start, str.length()));
   return result;
 }
 
 void defineType(std::ofstream &output, std::string &baseName,
                 std::string &className, std::string &elements) {
+  className = eraseWS(className);
   output << "static class " << className << " : " << baseName << " {\n";
 
   // constructor
@@ -81,28 +84,26 @@ void defineType(std::ofstream &output, std::string &baseName,
 
 template<typename T, size_t N>
 void defineBase(std::ofstream& output, const std::array<T,N> &types) {
-  
-  output << endl;
-  output << "\n template<typename R>\n class Visitor{\n";
-
-  for (const auto &type : types) {
-    uint8_t semicol = type.find(':');
-    std::string className = type.substr(0, semicol);
-
-    output << tab << "R visit" << className << "Expr(" << className << " expr);\n";
-  }
-
-  output << 
-  "\n };"
-  "\n "
+  // Expr class implementation
+  output <<
   "\n class Expr {"
   "\n public:"
   "\n  template<typename R>"
   "\n  R accept(Visitor<R> visitor);"
-  "\n };";
+  "\n };\n";
 
+  // visitor class implementation
+  output << "\n template<typename R>\n class Visitor{\n";
+  for (const auto &type : types) {
+    uint8_t semicol = type.find(':');
+    std::string className = type.substr(0, semicol);
+    className = eraseWS(className);
+    output << tab << "R visit" << className << "Expr(" << className << " expr);\n";
+  }
 
+  output << "\n };\n";
 }
+
 
 template <typename T, size_t N>
 void defineAst(std::string outputDir, std::string baseName,
@@ -126,8 +127,8 @@ void defineAst(std::string outputDir, std::string baseName,
     std::cout << semicol << " " << className << elements;
     defineType(output, baseName, className, elements);
   }
-
-  output << "}" << endl;
+  
+  output << "\n";
   output.close();
 }
 
