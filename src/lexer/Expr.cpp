@@ -1,3 +1,22 @@
+
+
+ template<typename R>
+ class Visitor{	R visitBinary   Expr(Binary    expr);
+	R visitGrouping Expr(Grouping  expr);
+	R visitLiteral  Expr(Literal   expr);
+	R visitUnary    Expr(Unary     expr);
+
+  R ...()
+  R ...()
+ };
+ 
+ class Expr {
+ public:
+  template<typename R>
+  R accept(Visitor<R> visitor);
+ };
+
+
 static class Binary    : Expr {
 	public:
 Binary   ( Expr left, Token operator, Expr right) : Expr(Expr) : operator(operator) : right(right){}

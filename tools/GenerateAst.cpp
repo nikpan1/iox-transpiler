@@ -83,7 +83,7 @@ template<typename T, size_t N>
 void defineBase(std::ofstream& output, const std::array<T,N> &types) {
   
   output << endl;
-  output << "\n template<typename R>\n class Visitor{";
+  output << "\n template<typename R>\n class Visitor{\n";
 
   for (const auto &type : types) {
     uint8_t semicol = type.find(':');
@@ -93,8 +93,6 @@ void defineBase(std::ofstream& output, const std::array<T,N> &types) {
   }
 
   output << 
-  "\n  R ...()"
-  "\n  R ...()"
   "\n };"
   "\n "
   "\n class Expr {"
@@ -117,6 +115,9 @@ void defineAst(std::string outputDir, std::string baseName,
     std::cerr << "Failed to open the file. | defineAst\n";
     exit(-1);
   }
+  
+  defineBase(output, types);
+  output << "\n\n\n";
 
   for (const auto &type : types) {
     uint8_t semicol = type.find(':');
