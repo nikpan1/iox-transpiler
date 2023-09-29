@@ -4,6 +4,7 @@
 #include "lox.cpp"
 #include <string>
 
+// @TODO remove this later
 #define null NULL
 
 class AstPrinter : Visitor<std::string> {
