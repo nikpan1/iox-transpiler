@@ -1,10 +1,14 @@
 #include "Token.hpp"
 
-Token::Token(TokenType tp, std::string le, Object lit, int lin) {
-  type = tp;
-  lexeme = le;
-  literal = lit;
-  line = lin;
+Token(TokenType type, std::string lexeme, int line) {
+  Token(type, lexeme, std::any{}, line);
+}
+
+Token::Token(TokenType type, std::string lexeme, std::any literal, int line) {
+  type = type;
+  lexeme = lexeme;
+  literal = literal;
+  line = line;
 }
 
 std::ostream &operator<<(std::ostream &os, const Token &obj) {

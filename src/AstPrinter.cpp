@@ -1,7 +1,10 @@
+#include "Core.cpp"
 #include "Expr.cpp"
 #include "Token.hpp"
 #include "lox.cpp"
 #include <string>
+
+#define null NULL
 
 class AstPrinter : Visitor<std::string> {
 public:
@@ -14,8 +17,7 @@ private:
 
     result = "(" + name;
     for (Expr expr : exprs) {
-      result += " ";
-      result += expr.accept(this);
+      result += " " + expr.accept(this);
     }
     result += ")";
 
@@ -24,30 +26,30 @@ private:
 
 public:
   std::string visitBinaryExpr(Binary expr) {
-    return parenthesize(operator.lexeme, left, right);
+    return parenthesize(expr.operator.lexeme, expr.left, expr.right);
   }
 
   std::string visitGroupingExpr(Grouping expr) {
-    return parenthesize("group", expression);
+    return parenthesize("group", expr.expression);
   }
 
   std::string visitLiteralExpr(Literal expr) {
-    if (value == null)
+    if (expr.value == null)
       return "nil";
-    return value.toString();
+    return expr.value.toString();
   }
 
   std::string visitUnaryExpr(Unary expr) {
-    return parenthesize(operator.lexeme, right);
+    return parenthesize(expr.operator.lexeme, expr.right);
   }
 };
 
 void main() {
-  Expr expression = Binary(
-      new Unary(new Token(TokenType.MINUS, "-", null, 1), new Literal(123)),
-      new Token(TokenType.STAR, "*", null, 1),
-      new Grouping(new Literal(45.67)));
+  Expr expression =
+      Binary(new Unary(new Token(MINUS, "-", void(0), 1), new Literal(123)),
+             new Token(STAR, "*", null, 1), new Grouping(new Literal(45.67)));
 
   auto a = new AstPrinter();
   std::cout << a->print(expression);
+  return 1;
 }

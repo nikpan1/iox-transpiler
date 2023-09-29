@@ -4,7 +4,7 @@ My approach to writing a simple transpiler while reading books, so I can easier 
 For now It's mostly made as the author of craftinginterpreters proposes, but in the future there will be a bigger approach with more features.
 
 ## About The Language
- Simple naming conventions (python like) with expression rules exactly like in C (Give me my increments! ++).
+Simple naming conventions (python like) with expression rules exactly like in C (Give me my increments! ++).
 
 ## Implemented
 - Scanner (Token Type with error handling)
