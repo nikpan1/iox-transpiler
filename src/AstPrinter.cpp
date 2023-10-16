@@ -12,16 +12,17 @@ public:
   std::string print(Expr expr) { return expr.accept(this); }
 
 private:
-  template <typename... Args>
-  std::string parenthesize(std::string name, Args... exprs) {
-    std::string result;
+  std::string argAccepts = "";
 
-    result = "(" + name;
-    for (Expr expr : exprs) {
-      result += " " + expr.accept(this);
-    }
-    result += ")";
+  template <typename T, typename... Args>
+  std::string parenthesize(std::string name, T first, Args... exprs) {
+    argAccepts += " " + first.accept(this);
+    parenthesize(name, exprs...);
+  }
 
+  std::string parenthesize(std::string name) {
+    std::string result = '(' + name + argAccepts + ')';
+    argAccepts.clear();
     return result;
   }
 
