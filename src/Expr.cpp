@@ -1,3 +1,4 @@
+#include "Token.hpp"
 #include "lox.cpp"
 #include <any>
 
@@ -20,8 +21,8 @@ public:
 
 static class Binary : Expr {
 public:
-  Binary(Expr left, Token operator, Expr right)
-      : Expr(Expr), operator(operator), right(right) {}
+  Binary(Expr _left, Token _operator, Expr _right)
+      : Expr(_left), operator(_operator), right(_right) {}
 
   Expr left;
   Token operator;
