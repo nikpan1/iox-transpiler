@@ -4,13 +4,12 @@
 #include <sstream>
 #include <string>
 
-#define Object std::string
 
 class Token {
 
   TokenType type;
   std::string lexeme;
-  Object literal;
+  std::string literal;
   int line;
 
 public:

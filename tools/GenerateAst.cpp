@@ -11,7 +11,7 @@
 
 std::array<std::string, 4> EXPRESSIONS = {
     "Binary   : Expr left, Token operator, Expr right",
-    "Grouping : Expr expression", "Literal  : Object value",
+    "Grouping : Expr expression", "Literal  : std::string value",
     "Unary    : Token operator, Expr right"};
 
 std::vector<std::string> split(const std::string &str,

@@ -19,7 +19,7 @@ class Scanner {
   char peek();
   char peekNext();
   void addToken(TokenType type);
-  void addToken(TokenType type, Object literal);
+  void addToken(TokenType type, std::string literal);
   void string_con();
   void number_con();
   void comment_con();
@@ -33,5 +33,5 @@ public:
   Scanner(std::string s);
   std::vector<Token> scanTokens();
   void scanToken();
-  void scanToken(TokenType type, Object literal);
+  void scanToken(TokenType type, std::string literal);
 };
