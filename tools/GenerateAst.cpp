@@ -5,38 +5,17 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
 
 #define endl '\n'
 #define tab '\t'
 
-
 std::array<std::string, 4> EXPRESSIONS = {
-      "Binary   : Expr left, Token operator, Expr right",
-      "Grouping : Expr expression",
-      "Literal  : Object value",
-      "Unary    : Token operator, Expr right"
-};
-
-
-bool isWhitespace(unsigned char c) {
-    if (c == ' ' || c == '\t' || c == '\n' ||
-        c == '\r' || c == '\f' || c == '\v') {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
-std::string eraseWS(std::string s) {
-  s.erase(std::remove_if(s.begin(), s.end(), isWhitespace), s.end());
-  return s;
-}
-
+    "Binary   : Expr left, Token operator, Expr right",
+    "Grouping : Expr expression", "Literal  : Object value",
+    "Unary    : Token operator, Expr right"};
 
 std::vector<std::string> split(const std::string &str,
-                               std::string separator) {
+                               const std::string &separator) {
   std::vector<std::string> result;
 
   int start = 0, last = 0;
@@ -49,61 +28,30 @@ std::vector<std::string> split(const std::string &str,
     foundPos = str.find(separator, start);
   }
 
-  result.push_back(str.substr(start, str.length()));
+  result.push_back(str.substr(start, str.length() - 1));
   return result;
 }
 
 void defineType(std::ofstream &output, std::string &baseName,
                 std::string &className, std::string &elements) {
-  className = eraseWS(className);
-  output << "static class " << className << " : " << baseName << " {\n";
+  output << "static class" << className << " : " << baseName << " {\n";
 
   // constructor
-  output << tab << "public:\n" << className << "(" << elements << ")";
+  output << tab << className << '(' << elements << ") {";
 
   // store parameters in fields
   auto fields = split(elements, ", ");
-  std::string initList = "\n";
   for (const auto field : fields) {
-    initList += " " + field + ";\n";
-
     auto names = split(field, " ");
     auto name = names[1];
-    output << " : " << name << '(' << name << ')';
+    output << " this." << name << " = " << name << ';';
   }
-  output << "{}\n";
-  className = eraseWS(className);
-
-  // visitor interface
-  output << initList;
-  output << "\n template<typename R>" 
-  "\n R accept(Visitor<R> visitor) {" 
-  "\n\t return visitor.visit" 
-  << className <<"Expr(this);\n}\n}\n";
-}
-
-template<typename T, size_t N>
-void defineBase(std::ofstream& output, const std::array<T,N> &types) {
-  // Expr class implementation
-  output <<
-  "\n class Expr {"
-  "\n public:"
-  "\n  template<typename R>"
-  "\n  R accept(Visitor<R> visitor);"
-  "\n };\n";
-
-  // visitor class implementation
-  output << "\n template<typename R>\n class Visitor{\n";
-  for (const auto &type : types) {
-    uint8_t semicol = type.find(':');
-    std::string className = type.substr(0, semicol);
-    className = eraseWS(className);
-    output << tab << "R visit" << className << "Expr(" << className << " expr);\n";
+  output << "\t}\n";
+  for (const auto field : fields) {
+    output << "\tfinal " << field << ';';
   }
-
-  output << "\n };\n";
+  output << "\t}";
 }
-
 
 template <typename T, size_t N>
 void defineAst(std::string outputDir, std::string baseName,
@@ -116,10 +64,9 @@ void defineAst(std::string outputDir, std::string baseName,
     std::cerr << "Failed to open the file. | defineAst\n";
     exit(-1);
   }
-  
-  defineBase(output, types);
-  output << "\n\n\n";
 
+  output << endl;
+  output << "class" + baseName + " {" + endl; // baseName to klasa bazowa
   for (const auto &type : types) {
     uint8_t semicol = type.find(':');
     std::string className = type.substr(0, semicol);
@@ -127,10 +74,41 @@ void defineAst(std::string outputDir, std::string baseName,
     std::cout << semicol << " " << className << elements;
     defineType(output, baseName, className, elements);
   }
-  
-  output << "\n";
+
+  output << "}" << endl;
   output.close();
 }
+
+#define EXPR int
+
+class Visitor {
+  std::string visitBinaryExpr(EXPR expr) {
+    return parenthesize(expr.operator.lexeme, expr.left, expr.right);
+  }
+  std::string visitGroupingExpr(EXPR expr) {
+    return parenthize("group", expr.expression);
+  }
+  std::string visitLiteralExpr(EXPR expr) {
+    if (expr.value == null)
+      return "nil";
+    return expr.value.to_string();
+  }
+  std::string visitUnaryExpr(EXPR expr) {
+    return parenthesize(expr.operator.lexeme, expr.right);
+  }
+
+  std::string parenthize(std::string name, std::vector<EXPR> exprs) {
+    std::string result = "";
+    result += ('(') + (name);
+    for (const auto expr : exprs) {
+      result += (' ');
+      result += (expr.accept(this));
+    }
+    result += (')');
+
+    return result;
+  }
+};
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
