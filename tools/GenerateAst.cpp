@@ -1,4 +1,5 @@
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
@@ -48,10 +49,14 @@ void defineType(std::ofstream &output, std::string &baseName,
   }
   output << "\t}\n";
   for (const auto field : fields) {
-    output << "\tfinal " << field << ';';
+    output << "\t" << field << ';';
   }
   output << "\t}";
 }
+
+template <typename T, size_t N>
+void defineType(std::ofstream output, std::string baseName,
+                const std::array<T, N> &types) {}
 
 template <typename T, size_t N>
 void defineAst(std::string outputDir, std::string baseName,
@@ -64,7 +69,7 @@ void defineAst(std::string outputDir, std::string baseName,
     std::cerr << "Failed to open the file. | defineAst\n";
     exit(-1);
   }
-
+  output << "#include <iostream>";
   output << endl;
   output << "class" + baseName + " {" + endl; // baseName to klasa bazowa
   for (const auto &type : types) {
@@ -74,6 +79,8 @@ void defineAst(std::string outputDir, std::string baseName,
     std::cout << semicol << " " << className << elements;
     defineType(output, baseName, className, elements);
   }
+
+  defineVisitor(output, baseName, types);
 
   output << "}" << endl;
   output.close();
