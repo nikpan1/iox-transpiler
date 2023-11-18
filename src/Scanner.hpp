@@ -1,4 +1,5 @@
-#include "lox.cpp"
+#include "Token.hpp"
+#include "errorLog.hpp"
 #include <string>
 #include <vector>
 
@@ -7,8 +8,8 @@ class Scanner {
   int start = 0;
   int current = 0;
   int line = 1;
-  lox _lox;
-  std::vector<Token> tokens;
+  //  lox _lox;
+  std::vector<Token> *tokens;
 
   bool isAtEnd();
   char advance();

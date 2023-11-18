@@ -13,8 +13,8 @@ std::vector<Token> Scanner::scanTokens() {
   }
 
   // @TODO is it right?
-  tokens.push_back(Token(ENDOF, "", "", line));
-  return tokens;
+  tokens->push_back(Token(ENDOF, "", "", line));
+  return *tokens;
 }
 
 void Scanner::scanToken() {
@@ -93,7 +93,7 @@ void Scanner::scanToken() {
       identifier();
     } else {
 
-      _lox.error(line, "Unexpected character.");
+      errorLog::error(line, "Unexpected character.");
     }
     break;
   }
@@ -102,7 +102,7 @@ void Scanner::scanToken() {
 char Scanner::advance() { return source[current++]; }
 void Scanner::addToken(TokenType type, std::string literal) {
   std::string text = source.substr(start, current);
-  tokens.push_back(Token(type, text, literal, line));
+  tokens->push_back(Token(type, text, literal, line));
 }
 
 void Scanner::addToken(TokenType type) { addToken(type, ""); }
@@ -128,7 +128,7 @@ void Scanner::string_con() {
   }
 
   if (isAtEnd()) {
-    _lox.error(line, "Unterminated string.");
+    errorLog::error(line, "Unterminated string.");
     return;
   }
 
@@ -176,9 +176,9 @@ void Scanner::identifier() {
     advance();
 
   std::string text = source.substr(start, current);
-  TokenType type = keywords.find(text);
-  if (type == nul)
-    type = IDENTIFIER;
+  TokenType type = keywords.find(text)->second;
+  // if (!type)
+  //     type = IDENTIFIER;
   addToken(IDENTIFIER);
 }
 

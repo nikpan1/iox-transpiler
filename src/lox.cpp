@@ -67,15 +67,6 @@ public:
     }
   }
 
-  static void error(int line, std::string message) {
-    report(line, "", message);
-  }
-
-  static void report(int line, std::string where, std::string message) {
-    printf("[Line: %d] | Error: %s : \n->%s", line, message.c_str(),
-           where.c_str());
-  }
-
 public:
   int main(int argc, char *argv[]) {
     if (argc > 1) {
