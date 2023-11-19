@@ -55,8 +55,11 @@ void defineType(std::ofstream &output, std::string &baseName,
 }
 
 template <typename T, size_t N>
-void defineType(std::ofstream output, std::string baseName,
-                const std::array<T, N> &types) {}
+void defineVisitor(std::ofstream output, std::string baseName,
+                   const std::array<T, N> &types) {
+  output << "template <typename R>";
+  output << ""
+}
 
 template <typename T, size_t N>
 void defineAst(std::string outputDir, std::string baseName,
@@ -81,7 +84,6 @@ void defineAst(std::string outputDir, std::string baseName,
   }
 
   defineVisitor(output, baseName, types);
-
   output << "}" << endl;
   output.close();
 }
