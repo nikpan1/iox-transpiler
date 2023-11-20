@@ -89,7 +89,7 @@ class Visitor {
     return parenthize("group", expr.expression);
   }
   std::string visitLiteralExpr(EXPR expr) {
-    if (expr.value == null)
+    if (expr.value == "")
       return "nil";
     return expr.value.to_string();
   }
