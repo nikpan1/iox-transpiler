@@ -105,7 +105,7 @@ void Scanner::addToken(TokenType type, std::string literal) {
   tokens.push_back(Token(type, text, literal, line));
 }
 
-void Scanner::addToken(TokenType type) { addToken(type, NULL); }
+void Scanner::addToken(TokenType type) { addToken(type, ""); }
 
 bool Scanner::match(char excepted) {
   if (isAtEnd() || source[current] != excepted)
@@ -150,7 +150,7 @@ void Scanner::number_con() {
       advance();
   }
   double strNumToDouble = std::stod(source.substr(start, current));
-  addToken(NUMBER, strNumToDouble);
+  addToken(NUMBER, std::to_string(strNumToDouble));
 }
 
 void Scanner::comment_con() {
