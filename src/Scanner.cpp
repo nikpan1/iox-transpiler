@@ -1,6 +1,9 @@
 #include "Scanner.hpp"
 
-Scanner::Scanner(std::string s) { source = s; }
+Scanner::Scanner(std::string _source) {
+  source = _source;
+  tokens = new std::vector<Token>();
+}
 bool Scanner::isAtEnd() { return current >= source.length(); }
 
 std::vector<Token> Scanner::scanTokens() {
@@ -9,7 +12,8 @@ std::vector<Token> Scanner::scanTokens() {
     scanToken();
   }
 
-  tokens.push_back(Token(EOF, "", NULL, line));
+  // @TODO is it right?
+  tokens.push_back(Token(ENDOF, "", "", line));
   return tokens;
 }
 
