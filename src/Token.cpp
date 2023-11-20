@@ -1,10 +1,11 @@
 #include "Token.hpp"
 
-Token(TokenType type, std::string lexeme, int line) {
-  Token(type, lexeme, std::any{}, line);
+Token::Token(TokenType type, std::string lexeme, int line) {
+  Token(type, lexeme, "", line);
 }
 
-Token::Token(TokenType type, std::string lexeme, std::any literal, int line) {
+Token::Token(TokenType type, std::string lexeme, std::string literal,
+             int line) {
   type = type;
   lexeme = lexeme;
   literal = literal;

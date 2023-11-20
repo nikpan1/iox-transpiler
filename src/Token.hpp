@@ -4,7 +4,6 @@
 #include <sstream>
 #include <string>
 
-
 class Token {
 
   TokenType type;
@@ -14,7 +13,9 @@ class Token {
 
 public:
   Token(TokenType type, std::string lexeme, int line);
-  Token(TokenType type, std::string lexeme, std::any literal, int line);
+  // I used to use std::any for the literal, but for simplicity I will stick
+  // with string
+  Token(TokenType type, std::string lexeme, std::string literal, int line);
 
   friend std::ostream &operator<<(std::ostream &os, const Token &obj);
 };

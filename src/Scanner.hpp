@@ -1,7 +1,4 @@
-#include "Core.cpp"
-#include "Token.hpp"
 #include "lox.cpp"
-#include "main.cpp"
 #include <string>
 #include <vector>
 
