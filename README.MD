@@ -25,14 +25,14 @@ Keywords can be found in the src/Core.cpp file.
 ## Expression grammar
 
 expression     → equality ;
-equality       → comparison ( ( "!=" | "==" ) comparison )* ;
-comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-term           → factor ( ( "-" | "+" ) factor )* ;
-factor         → unary ( ( "/" | "*" ) unary )* ;
-unary          → ( "!" | "-" ) unary
-               | primary ;
-primary        → NUMBER | STRING | "true" | "false" | "nil"
-               | "(" expression ")" ;
+equality       → comparison ( ( "!=" | "==" ) comparison )* ;   </br>
+comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;   </br>
+term           → factor ( ( "-" | "+" ) factor )* ;             </br>
+factor         → unary ( ( "/" | "*" ) unary )* ;               </br>
+unary          → ( "!" | "-" ) unary                            </br>
+               | primary ;                                      </br>
+primary        → NUMBER | STRING | "true" | "false" | "nil"     </br>
+               | "(" expression ")" ;                           </br>
 
 ## Sources 
 - craftinginterpreters.com
