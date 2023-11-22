@@ -1,4 +1,5 @@
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
@@ -48,9 +49,16 @@ void defineType(std::ofstream &output, std::string &baseName,
   }
   output << "\t}\n";
   for (const auto field : fields) {
-    output << "\tfinal " << field << ';';
+    output << "\t" << field << ';';
   }
   output << "\t}";
+}
+
+template <typename T, size_t N>
+void defineVisitor(std::ofstream output, std::string baseName,
+                   const std::array<T, N> &types) {
+  output << "template <typename R>";
+  output << ""
 }
 
 template <typename T, size_t N>
@@ -64,7 +72,7 @@ void defineAst(std::string outputDir, std::string baseName,
     std::cerr << "Failed to open the file. | defineAst\n";
     exit(-1);
   }
-
+  output << "#include <iostream>";
   output << endl;
   output << "class" + baseName + " {" + endl; // baseName to klasa bazowa
   for (const auto &type : types) {
@@ -75,6 +83,7 @@ void defineAst(std::string outputDir, std::string baseName,
     defineType(output, baseName, className, elements);
   }
 
+  defineVisitor(output, baseName, types);
   output << "}" << endl;
   output.close();
 }
@@ -89,7 +98,7 @@ class Visitor {
     return parenthize("group", expr.expression);
   }
   std::string visitLiteralExpr(EXPR expr) {
-    if (expr.value == null)
+    if (expr.value == "")
       return "nil";
     return expr.value.to_string();
   }

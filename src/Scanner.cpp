@@ -1,6 +1,9 @@
 #include "Scanner.hpp"
 
-Scanner::Scanner(std::string s) { source = s; }
+Scanner::Scanner(std::string _source) {
+  source = _source;
+  tokens = new std::vector<Token>();
+}
 bool Scanner::isAtEnd() { return current >= source.length(); }
 
 std::vector<Token> Scanner::scanTokens() {
@@ -9,8 +12,9 @@ std::vector<Token> Scanner::scanTokens() {
     scanToken();
   }
 
-  tokens.push_back(Token(EOF, "", NULL, line));
-  return tokens;
+  // @TODO is it right?
+  tokens->push_back(Token(ENDOF, "", "", line));
+  return *tokens;
 }
 
 void Scanner::scanToken() {
@@ -89,7 +93,7 @@ void Scanner::scanToken() {
       identifier();
     } else {
 
-      _lox.error(line, "Unexpected character.");
+      errorLog::error(line, "Unexpected character.");
     }
     break;
   }
@@ -98,10 +102,10 @@ void Scanner::scanToken() {
 char Scanner::advance() { return source[current++]; }
 void Scanner::addToken(TokenType type, std::string literal) {
   std::string text = source.substr(start, current);
-  tokens.push_back(Token(type, text, literal, line));
+  tokens->push_back(Token(type, text, literal, line));
 }
 
-void Scanner::addToken(TokenType type) { addToken(type, NULL); }
+void Scanner::addToken(TokenType type) { addToken(type, ""); }
 
 bool Scanner::match(char excepted) {
   if (isAtEnd() || source[current] != excepted)
@@ -124,7 +128,7 @@ void Scanner::string_con() {
   }
 
   if (isAtEnd()) {
-    _lox.error(line, "Unterminated string.");
+    errorLog::error(line, "Unterminated string.");
     return;
   }
 
@@ -146,7 +150,7 @@ void Scanner::number_con() {
       advance();
   }
   double strNumToDouble = std::stod(source.substr(start, current));
-  addToken(NUMBER, strNumToDouble);
+  addToken(NUMBER, std::to_string(strNumToDouble));
 }
 
 void Scanner::comment_con() {
@@ -172,9 +176,9 @@ void Scanner::identifier() {
     advance();
 
   std::string text = source.substr(start, current);
-  TokenType type = keywords.find(text);
-  if (type == nul)
-    type = IDENTIFIER;
+  TokenType type = keywords.find(text)->second;
+  // if (!type)
+  //     type = IDENTIFIER;
   addToken(IDENTIFIER);
 }
 

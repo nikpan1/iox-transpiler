@@ -47,7 +47,7 @@ enum TokenType {
   TRUE,
   VAR,
   WHILE,
-  EOF
+  ENDOF // EOF
 };
 
 std::map<std::string, TokenType> keywords = {

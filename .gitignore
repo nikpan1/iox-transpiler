@@ -1,2 +1,7 @@
+
+# ignore Build dirs
+[Bb]uild/
+
+# ignore compiled files created while testing
 a.out
 

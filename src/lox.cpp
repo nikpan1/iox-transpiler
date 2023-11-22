@@ -8,6 +8,9 @@
 #include <sstream>
 
 #include "Core.cpp"
+#include "Scanner.hpp"
+#include "Token.hpp"
+
 #define NULL (void *)0
 
 std::string readEntireFile(const std::string &filePath) {
@@ -26,11 +29,12 @@ std::string readEntireFile(const std::string &filePath) {
   return buffer.str();
 }
 
-class lox {
+class lox { // @TODO everything should be static
   bool hadError = false;
 
   void runPrompt() {
     std::string input;
+
     for (;;) {
       printf("> ");
       std::getline(std::cin, input);
@@ -55,21 +59,12 @@ public:
       // system.exit(-1);
     }
 
-    Scanner scanner = new Scanner(src); // maybe into the constructor
-    std::vector<Token> tokens = scanner.scanTokens();
+    Scanner *scanner = new Scanner(src); // maybe into the constructor
+    std::vector<Token> tokens = scanner->scanTokens();
 
     for (Token token : tokens) {
-      printf("%s", token);
+      std::cout << token;
     }
-  }
-
-  static void error(int line, std::string message) {
-    report(line, "", message);
-  }
-
-  static void report(int line, std::string where, std::string message) {
-    printf("[Line: %d] | Error: %s : \n->%s", line, message.c_str(),
-           where.c_str());
   }
 
 public:
